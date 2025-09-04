@@ -20,6 +20,9 @@ set(SOURCE
   src/XOR/XOR.cpp
 
   src/WorkFile/WorkFile.cpp
+
+  src/WorkProgram/OneTimeStart.cpp
+  src/WorkProgram/TimerWork.cpp
 )
 
 set(HEADERS

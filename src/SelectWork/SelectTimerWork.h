@@ -8,7 +8,7 @@
 class SelectTimerWork : public FS_SelectWork
 {
 public:
-  Work* createTypeWork()
+  Work* createTypeWork() override
   {
     return new TimerWork;
   }

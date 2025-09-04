@@ -1,10 +1,11 @@
 #include <WorkFile.h>
 
-WorkFile::WorkFile(std::string maskFile, std::string pathInputFile, std::string pathOutFile)
+WorkFile::WorkFile(std::string maskFile, std::string pathInputFile, std::string pathOutFile, std::string extens)
 {
   this->m_maskFile = maskFile;
   this->m_pathInputFile = pathInputFile;
   this->m_pathOutFile = pathOutFile;
+  this->m_extens = extens;
 }
 
 WorkFile::~WorkFile()
@@ -23,8 +24,8 @@ std::vector<std::string> WorkFile::searchInputFiles(std::string extens)
     if (entry.is_regular_file())
     {
       std::filesystem::path filePath = entry.path();
-      if (filePath.extension() == extens)
-        vectorFiles.push_back(filePath);      
+      if (filePath.extension() == m_extens)
+        vectorFiles.push_back(filePath);
     }
   }
 
@@ -67,4 +68,20 @@ void WorkFile::saveFile(uint64_t saveVariable)
   }
 
   write.close();
+}
+
+bool WorkFile::searchSimbol()
+{
+  std::string check = "*" + m_extens;
+  std::vector<std::string> checkVector;
+
+  checkVector.push_back(m_pathInputFile);
+
+  for (const auto& readVector : checkVector)
+  {
+    if(readVector.find(check) != std::string::npos)
+      return true;
+  }
+
+  return false;
 }
