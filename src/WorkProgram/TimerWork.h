@@ -2,6 +2,7 @@
 #include <iostream>
 
 #include "Work.h"
+#include "WorkFile.h"
 
 class TimerWork : public Work
 {

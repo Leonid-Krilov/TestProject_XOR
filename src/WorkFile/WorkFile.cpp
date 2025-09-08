@@ -15,59 +15,68 @@ WorkFile::~WorkFile()
   m_pathOutFile.clear();
 }
 
-std::vector<std::string> WorkFile::searchInputFiles(std::string extens)
+void WorkFile::searchInputFiles()
 {
-  std::vector<std::string> vectorFiles;
-
   for (const auto& entry : std::filesystem::directory_iterator(m_pathInputFile))
   {
     if (entry.is_regular_file())
     {
       std::filesystem::path filePath = entry.path();
       if (filePath.extension() == m_extens)
-        vectorFiles.push_back(filePath);
+        m_vectorFiles.push_back(filePath);
     }
   }
-
-  return vectorFiles;
 }
 
-uint64_t WorkFile::readFile()
+std::vector<uint64_t> WorkFile::readFile()
 {
-  uint64_t variableInput;
+  std::vector<uint64_t> variableInput;
   std::string variableString;
-  std::ifstream read(m_pathInputFile);
+  std::ifstream read;
 
-  if (!read.is_open())
-    std::cout << "\nError open input file";
-  else
+  for (std::string pathFiles : m_vectorFiles)
   {
-    while (std::getline(read, variableString))
-      variableInput = std::stoi(variableString);
+    read.open(pathFiles);
+
+    if (!read.is_open())
+      std::cout << "\nError open input file";
+    else
+    {
+      while (std::getline(read, variableString))
+        variableInput.push_back(std::stoi(variableString));
+    }
 
     read.close();
-    return variableInput;
   }
 
-  read.close();
-  return 0;
+  return variableInput;
 }
 
-void WorkFile::saveFile(uint64_t saveVariable)
+void WorkFile::saveFile(std::vector<uint64_t> saveVariable)
 {
-  std::ofstream write(m_pathOutFile);
+  int counter;
+  std::string pathsaveFile;
+  std::string outFile;
+  std::ofstream write;
 
-  if(!write.is_open())
-    std::cout << "\nError open out file";
-  else
+  for (uint64_t saveData : saveVariable)
   {
-    if(saveVariable == 0)
-      std::cout  << "\nVariable NULL";
-    else
-      write << saveVariable;
-  }
+    counter++;
+    outFile = m_pathInputFile + std::to_string(counter) + "result." + m_maskFile;
 
-  write.close();
+    write.open(outFile);
+    if(!write.is_open())
+      std::cout << "\nError open out file";
+    else
+    {
+      if(saveData == 0)
+        std::cout  << "\nVariable NULL";
+      else
+        write << saveData;
+    }
+
+    write.close();
+  }
 }
 
 bool WorkFile::searchSimbol()

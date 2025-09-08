@@ -2,8 +2,9 @@
 
 void OneTimeStart::workProgram(std::string maskFile, std::string pathInputFile, std::string pathOutFile, std::string extens)
 {
-  uint64_t resultXOR;
+  std::vector<uint64_t> resultXOR;
   WorkFile workFile(maskFile, pathInputFile, pathOutFile, extens);
+  
   //workFile.readFile(); закинуть сразу в функцию XOE
   //функция выполнения XOR
 
