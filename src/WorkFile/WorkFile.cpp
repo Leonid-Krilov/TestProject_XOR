@@ -1,4 +1,4 @@
-#include <WorkFile.h>
+#include "WorkFile.h"
 
 WorkFile::WorkFile(std::string maskFile, std::string pathInputFile, std::string pathOutFile, std::string extens)
 {
