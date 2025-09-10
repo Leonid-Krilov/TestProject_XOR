@@ -13,12 +13,13 @@ public:
   ~WorkFile();
   
   void searchInputFiles();
-  std::vector<uint64_t> readFile();
-  void saveFile(std::vector<uint64_t> saveVariable);
-  bool searchSimbol();
+  void readFile();
+  void saveFile();
+
 private:
   std::string m_extens;
   std::string m_maskFile;
   std::string m_pathInputFile, m_pathOutFile;
   std::vector<std::string> m_vectorFiles;
+  std::vector<uint64_t> m_variable;
 };

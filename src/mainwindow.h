@@ -1,12 +1,17 @@
 #ifndef MAINWINDOW_H
 #define MAINWINDOW_H
 
+#include <QDebug>
 #include <QMainWindow>
 #include <QPushButton>
 #include <QLineEdit>
 #include <QSpinBox>
 #include <QCheckBox>
 #include <string>
+#include <vector>
+#include <cstdint>
+
+#include "WorkFile.h"
 
 QT_BEGIN_NAMESPACE
 namespace Ui {
@@ -37,7 +42,9 @@ private:
     QLineEdit *pathInputFiles, *maskInputFiles, *pathOutFiles, *nameOutFiles;
 
     std::string m_stringPathInputFiles, m_stringPathOutFiles;
-    std::string m_stringMaskInputFiles, m_stringNameOutFiles;
+    std::string m_stringMaskInputFiles, m_extens;
 
+    std::vector<uint64_t> variableInput;
+    std::vector<uint64_t> saveVariable;
 };
 #endif // MAINWINDOW_H

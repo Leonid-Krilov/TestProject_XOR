@@ -13,6 +13,7 @@ WorkFile::~WorkFile()
   m_maskFile.clear();
   m_pathInputFile.clear();
   m_pathOutFile.clear();
+  m_extens.clear();
 }
 
 void WorkFile::searchInputFiles()
@@ -28,7 +29,7 @@ void WorkFile::searchInputFiles()
   }
 }
 
-std::vector<uint64_t> WorkFile::readFile()
+void WorkFile::readFile()
 {
   std::vector<uint64_t> variableInput;
   std::string variableString;
@@ -43,23 +44,21 @@ std::vector<uint64_t> WorkFile::readFile()
     else
     {
       while (std::getline(read, variableString))
-        variableInput.push_back(std::stoi(variableString));
+        m_variable.push_back(std::stoi(variableString));
     }
 
     read.close();
   }
-
-  return variableInput;
 }
 
-void WorkFile::saveFile(std::vector<uint64_t> saveVariable)
+void WorkFile::saveFile()
 {
   int counter;
   std::string pathsaveFile;
   std::string outFile;
   std::ofstream write;
 
-  for (uint64_t saveData : saveVariable)
+  for (uint64_t saveData : m_variable)
   {
     counter++;
     outFile = m_pathInputFile + std::to_string(counter) + "result." + m_maskFile;
@@ -77,20 +76,4 @@ void WorkFile::saveFile(std::vector<uint64_t> saveVariable)
 
     write.close();
   }
-}
-
-bool WorkFile::searchSimbol()
-{
-  std::string check = "*" + m_extens;
-  std::vector<std::string> checkVector;
-
-  checkVector.push_back(m_pathInputFile);
-
-  for (const auto& readVector : checkVector)
-  {
-    if(readVector.find(check) != std::string::npos)
-      return true;
-  }
-
-  return false;
 }

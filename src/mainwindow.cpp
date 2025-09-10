@@ -16,13 +16,23 @@ MainWindow::~MainWindow()
 
 void MainWindow::workOneTineLaunch()
 {
+    receivingString();
 
-
+    WorkFile workFile(m_stringMaskInputFiles, m_stringPathInputFiles, m_stringPathOutFiles, m_extens);
+    workFile.searchInputFiles();
+    workFile.readFile();
 }
 
 void MainWindow::cycleWork()
 {
+    while (true)
+    {
+        receivingString();
 
+        WorkFile workFile(m_stringMaskInputFiles, m_stringPathInputFiles, m_stringPathOutFiles, m_extens);
+        workFile.searchInputFiles();
+        workFile.readFile();
+    }
 }
 
 void MainWindow::receivingString()
@@ -30,10 +40,17 @@ void MainWindow::receivingString()
     QString stringPathInputFiles = ui->pathInputFiles->text();
     QString stringMaskInputFiles = ui->maskInputFiles->text();
     QString stringPathOutFiles = ui->pathOutFiles->text();
-    QString stringNameOutFiles = ui->nameOutFiles->text();
+    QString extens = ui->nameOutFiles->text();
 
-    this->m_stringPathInputFiles = stringPathInputFiles.toStdString();
-    this->m_stringMaskInputFiles = stringMaskInputFiles.toStdString();
-    this->m_stringPathOutFiles = stringPathOutFiles.toStdString();
-    this->m_stringNameOutFiles = stringNameOutFiles.toStdString();
+    if (!stringPathInputFiles.isEmpty() && !stringMaskInputFiles.isEmpty() && !stringPathOutFiles.isEmpty() && !extens.isEmpty())
+    {
+        this->m_stringPathInputFiles = stringPathInputFiles.toStdString();
+        this->m_stringMaskInputFiles = stringMaskInputFiles.toStdString();
+        this->m_stringPathOutFiles = stringPathOutFiles.toStdString();
+        this->m_extens = extens.toStdString();
+    }
+    else
+    {
+        qDebug() << "Error";
+    }
 }
