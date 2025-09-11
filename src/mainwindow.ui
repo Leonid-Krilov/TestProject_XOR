@@ -67,7 +67,7 @@
     <item row="9" column="0">
      <widget class="QLabel" name="label_4">
       <property name="text">
-       <string>Name out file</string>
+       <string>Binary value</string>
       </property>
      </widget>
     </item>
@@ -100,7 +100,7 @@
      </widget>
     </item>
     <item row="10" column="0">
-     <widget class="QLineEdit" name="nameOutFiles">
+     <widget class="QLineEdit" name="binaryValue">
       <property name="text">
        <string/>
       </property>

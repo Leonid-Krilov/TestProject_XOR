@@ -1,5 +1,7 @@
 #include "WorkFile.h"
 
+#include <QDebug>
+
 WorkFile::WorkFile(std::string maskFile, std::string pathInputFile, std::string pathOutFile, std::string extens)
 {
   this->m_maskFile = maskFile;
@@ -18,24 +20,34 @@ WorkFile::~WorkFile()
 
 void WorkFile::searchInputFiles()
 {
-  for (const auto& entry : std::filesystem::directory_iterator(m_pathInputFile))
-  {
-    if (entry.is_regular_file())
-    {
-      std::filesystem::path filePath = entry.path();
-      if (filePath.extension() == m_extens)
-        m_vectorFiles.push_back(filePath);
+    m_vectorPathFiles.clear(); // Очищаем вектор перед новым поиском
+    m_vectorNameFiles.clear();
+
+    try {
+        for (const auto& entry : std::filesystem::directory_iterator(m_pathInputFile))
+        {
+            if (entry.is_regular_file())
+            {
+                std::filesystem::path filePath = entry.path();
+                if (static_cast<std::string>(filePath.extension()) == m_maskFile)
+                {
+                    m_vectorPathFiles.push_back(filePath.string());
+                    m_vectorNameFiles.push_back(entry.path().filename().string());
+                }
+            }
+        }
     }
-  }
+    catch (const std::filesystem::filesystem_error& e) {
+        qDebug() << "Error directory:" << e.what();
+    }
 }
 
-void WorkFile::readFile()
+std::vector<uint64_t> WorkFile::readFile()
 {
-  std::vector<uint64_t> variableInput;
   std::string variableString;
   std::ifstream read;
 
-  for (std::string pathFiles : m_vectorFiles)
+  for (std::string pathFiles : m_vectorPathFiles)
   {
     read.open(pathFiles);
 
@@ -49,19 +61,21 @@ void WorkFile::readFile()
 
     read.close();
   }
+
+  return m_variable;
 }
 
-void WorkFile::saveFile()
+void WorkFile::saveFile(std::bitset<64>(resultXOR))
 {
   int counter;
   std::string pathsaveFile;
   std::string outFile;
   std::ofstream write;
-
+    //сделать сохранение фа
   for (uint64_t saveData : m_variable)
   {
     counter++;
-    outFile = m_pathInputFile + std::to_string(counter) + "result." + m_maskFile;
+    outFile = m_pathOutFile + std::to_string(counter) + "result." + m_maskFile;
 
     write.open(outFile);
     if(!write.is_open())

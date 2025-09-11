@@ -5,6 +5,7 @@
 #include <cstdint>
 #include <filesystem>
 #include <vector>
+#include <bitset>
 
 class WorkFile
 {
@@ -13,13 +14,13 @@ public:
   ~WorkFile();
   
   void searchInputFiles();
-  void readFile();
-  void saveFile();
+  std::vector<uint64_t> readFile();
+  void saveFile(std::bitset<64>(resultXOR));
 
 private:
   std::string m_extens;
   std::string m_maskFile;
   std::string m_pathInputFile, m_pathOutFile;
-  std::vector<std::string> m_vectorFiles;
+  std::vector<std::string> m_vectorPathFiles, m_vectorNameFiles;
   std::vector<uint64_t> m_variable;
 };

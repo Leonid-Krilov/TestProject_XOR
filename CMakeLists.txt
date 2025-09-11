@@ -15,8 +15,6 @@ find_package(Qt${QT_VERSION_MAJOR} REQUIRED COMPONENTS Widgets)
 include_directories(
   src/XOR
   src/WorkFile
-  src/SelectWork
-  src/WorkProgram
 )
 
 set(PROJECT_SOURCES
@@ -30,18 +28,6 @@ set(PROJECT_SOURCES
         
     src/WorkFile/WorkFile.cpp
     src/WorkFile/WorkFile.h
-
-  	src/SelectWork/FS_SelectWork.h
-  	src/SelectWork/SelectOneTimeStart.h
-  	src/SelectWork/SelectTimerWork.h
-
-  	src/WorkProgram/Work.h
-  	
-  	src/WorkProgram/OneTimeStart.cpp
-  	src/WorkProgram/OneTimeStart.h
-  	
-  	src/WorkProgram/TimerWork.cpp
-  	src/WorkProgram/TimerWork.h
 )
 
 if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)

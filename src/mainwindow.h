@@ -12,6 +12,7 @@
 #include <cstdint>
 
 #include "WorkFile.h"
+#include "XOR.h"
 
 QT_BEGIN_NAMESPACE
 namespace Ui {
@@ -39,10 +40,10 @@ private:
     QSpinBox *spinBoxTimer;
     QPushButton *oneTimeLaunchButton, *cycleWorkButton;
     QCheckBox *checkBoxTimer, *checkBoxDeleteFiles, *checkBoxModificOutFiles;
-    QLineEdit *pathInputFiles, *maskInputFiles, *pathOutFiles, *nameOutFiles;
+    QLineEdit *pathInputFiles, *maskInputFiles, *pathOutFiles, *binaryValue;
 
     std::string m_stringPathInputFiles, m_stringPathOutFiles;
-    std::string m_stringMaskInputFiles, m_extens;
+    std::string m_stringMaskInputFiles, m_inputBinaryValue;
 
     std::vector<uint64_t> variableInput;
     std::vector<uint64_t> saveVariable;
