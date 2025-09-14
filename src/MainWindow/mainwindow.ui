@@ -46,7 +46,7 @@
     <item row="11" column="0">
      <widget class="QCheckBox" name="checkBoxTimer">
       <property name="text">
-       <string>Timer</string>
+       <string>Timer restart</string>
       </property>
      </widget>
     </item>

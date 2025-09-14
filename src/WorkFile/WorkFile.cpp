@@ -2,47 +2,46 @@
 
 #include <QDebug>
 
-WorkFile::WorkFile(std::string maskFile, std::string pathInputFile, std::string pathOutFile, std::string extens)
+WorkFile::WorkFile()
 {
-  this->m_maskFile = maskFile;
-  this->m_pathInputFile = pathInputFile;
-  this->m_pathOutFile = pathOutFile;
-  this->m_extens = extens;
+
 }
 
 WorkFile::~WorkFile()
 {
-  m_maskFile.clear();
-  m_pathInputFile.clear();
-  m_pathOutFile.clear();
-  m_extens.clear();
+
 }
 
-void WorkFile::searchInputFiles()
+void WorkFile::clear()
 {
-    m_vectorPathFiles.clear(); // Очищаем вектор перед новым поиском
+    m_vectorPathFiles.clear();
     m_vectorNameFiles.clear();
-
-    try {
-        for (const auto& entry : std::filesystem::directory_iterator(m_pathInputFile))
-        {
-            if (entry.is_regular_file())
-            {
-                std::filesystem::path filePath = entry.path();
-                if (static_cast<std::string>(filePath.extension()) == m_maskFile)
-                {
-                    m_vectorPathFiles.push_back(filePath.string());
-                    m_vectorNameFiles.push_back(entry.path().filename().string());
-                }
-            }
-        }
-    }
-    catch (const std::filesystem::filesystem_error& e) {
-        qDebug() << "Error directory:" << e.what();
-    }
+    m_variable.clear();
 }
 
-std::vector<uint64_t> WorkFile::readFile()
+void WorkFile::searchInputFiles(std::string pathInputFile, std::string maskFile)
+{
+  try {
+    for (const auto& entry : std::filesystem::directory_iterator(pathInputFile))
+    {
+      if (entry.is_regular_file())
+      {
+        std::filesystem::path filePath = entry.path();
+        if (static_cast<std::string>(filePath.extension()) == maskFile)
+        {
+            m_vectorPathFiles.push_back(filePath.string());
+            m_vectorNameFiles.push_back(entry.path().filename().string());
+        }
+      }
+    }
+  }
+  catch (const std::filesystem::filesystem_error& e)
+  {
+    qDebug() << "Error directory:" << e.what();
+  }
+}
+
+std::vector<uint64_t> WorkFile::readFile(bool checkBoxDeletedFiles)
 {
   std::string variableString;
   std::ifstream read;
@@ -52,7 +51,7 @@ std::vector<uint64_t> WorkFile::readFile()
     read.open(pathFiles);
 
     if (!read.is_open())
-      std::cout << "\nError open input file";
+        qDebug() << "\nError open input file";
     else
     {
       while (std::getline(read, variableString))
@@ -60,34 +59,43 @@ std::vector<uint64_t> WorkFile::readFile()
     }
 
     read.close();
+
+    if (checkBoxDeletedFiles)
+      std::filesystem::remove(pathFiles);
   }
 
   return m_variable;
 }
 
-void WorkFile::saveFile(std::bitset<64>(resultXOR))
+void WorkFile::saveFile(std::vector<uint64_t>(resultXOR), std::string pathOutFile, bool checkBoxModificateFiles)
 {
-  int counter;
-  std::string pathsaveFile;
-  std::string outFile;
-  std::ofstream write;
-    //сделать сохранение фа
-  for (uint64_t saveData : m_variable)
-  {
-    counter++;
-    outFile = m_pathOutFile + std::to_string(counter) + "result." + m_maskFile;
+  static int counter = 1;
 
-    write.open(outFile);
-    if(!write.is_open())
-      std::cout << "\nError open out file";
+  for (size_t i = 0; i < m_vectorNameFiles.size(); i++)
+  {
+    std::string pathSaveFile = pathOutFile + "result_" + m_vectorNameFiles[i];
+    std::ofstream writeFile;
+
+    if (checkBoxModificateFiles)
+    {
+      writeFile.open(pathSaveFile, std::ios::trunc);
+    }
     else
     {
-      if(saveData == 0)
-        std::cout  << "\nVariable NULL";
-      else
-        write << saveData;
+      std::string finalPath = pathSaveFile;
+
+      while (std::filesystem::exists(finalPath))
+      {
+        finalPath = pathOutFile + std::to_string(counter++) + "_result_" + m_vectorNameFiles[i];
+      }
+
+      writeFile.open(finalPath, std::ios::binary);
     }
 
-    write.close();
+    if (writeFile.is_open())
+    {
+      writeFile << resultXOR[i];
+      writeFile.close();
+    }
   }
 }

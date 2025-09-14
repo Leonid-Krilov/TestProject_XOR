@@ -1,14 +1,22 @@
 #include "XOR.h"
+#include <QDebug>
 
-XOR::XOR(uint64_t inputBinaryValue, uint64_t readBinaryValue)
+
+XOR::XOR(std::vector<uint64_t> inputBinaryValue, uint64_t readBinaryValue)
 {
     this->m_inputBinaryValue = inputBinaryValue;
     this->m_readBinaryValue = readBinaryValue;
 }
 
-std::bitset<64> XOR::functionXOR()
+std::vector<uint64_t> XOR::functionXOR()
 {
-    uint64_t resultXOR = m_readBinaryValue ^ m_inputBinaryValue;
+  std::vector<uint64_t> resultXOR;
 
-    return std::bitset<64>(resultXOR);
+  for (uint64_t inputValue : m_inputBinaryValue)
+  {
+    uint64_t uintResultXOR = inputValue ^ m_readBinaryValue;
+    resultXOR.push_back(uintResultXOR);
+  }
+
+  return resultXOR;
 }

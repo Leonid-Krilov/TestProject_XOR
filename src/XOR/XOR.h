@@ -3,13 +3,15 @@
 #include <iostream>
 #include <cstdint>
 #include <bitset>
+#include <vector>
 
 class XOR
 {
 public:
-  XOR(uint64_t inputBinaryValue, uint64_t readBinaryValue);
-  std::bitset<64> functionXOR();
+  XOR(std::vector<uint64_t> inputBinaryValue, uint64_t readBinaryValue);
+  std::vector<uint64_t> functionXOR();
 
 private:
-  uint64_t m_inputBinaryValue, m_readBinaryValue;
+  std::vector<uint64_t> m_inputBinaryValue;
+  uint64_t m_readBinaryValue;
 };
