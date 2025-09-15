@@ -20,20 +20,6 @@ include_directories(
 )
 
 file(GLOB PROJECT_SOURCES "src/*.cpp" "src/*/*.cpp" "src/*.h" "src/*/*.h")
-#file(GLOB PROJECT_HEADERS )
-
-# set(PROJECT_SOURCES
-#     src/main.cpp
-#     src/mainwindow.cpp
-#     src/mainwindow.h
-#     src/mainwindow.ui
-        
-#     src/XOR/XOR.cpp
-#     src/XOR/XOR.h
-        
-#     src/WorkFile/WorkFile.cpp
-#     src/WorkFile/WorkFile.h
-# )
 
 if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
     qt_add_executable(${PROJECT_NAME}
