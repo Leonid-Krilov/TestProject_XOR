@@ -6,7 +6,7 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
   ui->setupUi(this);
 
   ui->spinBoxTimer->setEnabled(ui->checkBoxTimer->isChecked());
-  connect(ui->checkBoxTimer, &QCheckBox::stateChanged, this, &MainWindow::checkBoxChanged);
+  connect(ui->checkBoxTimer, &QCheckBox::checkStateChanged, this, &MainWindow::checkBoxChanged);
 
   connect(ui->oneTimeLaunchButton, &QPushButton::clicked, this, &MainWindow::workOneTineLaunch);
   connect(ui->cycleWorkButton, &QPushButton::clicked, this, &MainWindow::cycleWork);
