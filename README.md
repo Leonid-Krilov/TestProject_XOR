@@ -22,9 +22,9 @@ g) значение 8 байт для бинарной операции моди
 
 **Инструкция**\
 Пользователь вводит следующие параметры\
-*Path input files* - путь до вводного файла (пример для ubuntu **/home/user/inputfile/**, для windows **D:\test\input\**)\
+*Path input files* - путь до вводного файла (пример для ubuntu **/home/user/inputfile/**, для windows **D:\test\input\ **)\
 *Mask file* - расширение/маска файла (пример **.txt**)\
-*Path out file* - путь сохранения результата (пример для ubuntu **/home/user/outfile/** , для windows **D:\test\out\**)\
+*Path out file* - путь сохранения результата (пример для ubuntu **/home/user/outfile/** , для windows **D:\test\out\ **)\
 *Binary value* - 8-ми байтовое значение бинарной операциии\
 
 *CheckBox Timer restart* - необходим для настройки периодичности опроса наличия входного файла, время задается в секундах
