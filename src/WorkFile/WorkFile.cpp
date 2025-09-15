@@ -2,16 +2,6 @@
 
 #include <QDebug>
 
-WorkFile::WorkFile()
-{
-
-}
-
-WorkFile::~WorkFile()
-{
-
-}
-
 void WorkFile::clear()
 {
     m_vectorPathFiles.clear();
@@ -27,7 +17,7 @@ void WorkFile::searchInputFiles(std::string pathInputFile, std::string maskFile)
       if (entry.is_regular_file())
       {
         std::filesystem::path filePath = entry.path();
-        if (static_cast<std::string>(filePath.extension()) == maskFile)
+          if (filePath.extension().string() == maskFile)
         {
             m_vectorPathFiles.push_back(filePath.string());
             m_vectorNameFiles.push_back(entry.path().filename().string());
