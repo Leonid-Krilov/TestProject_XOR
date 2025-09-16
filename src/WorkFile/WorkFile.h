@@ -9,8 +9,8 @@
 class WorkFile
 {
 public:
-  WorkFile();
-  ~WorkFile();
+  WorkFile() = default;
+  ~WorkFile() = default;
   
   void searchInputFiles(std::string pathInputFile, std::string maskFile);
   std::vector<uint64_t> readFile(bool checkBoxDeletedFiles);
