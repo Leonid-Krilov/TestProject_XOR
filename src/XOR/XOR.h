@@ -4,14 +4,17 @@
 #include <cstdint>
 #include <bitset>
 #include <vector>
+#include <optional>
 
 class XOR
 {
 public:
-  XOR(std::vector<uint64_t> inputBinaryValue, uint64_t readBinaryValue);
-  std::vector<uint64_t> functionXOR();
+  XOR(std::vector<std::optional<uint64_t>> inputBinaryValue, uint64_t readBinaryValue);
+  ~XOR() = default;
+
+  std::vector<std::optional<uint64_t>> functionXOR();
 
 private:
-  std::vector<uint64_t> m_inputBinaryValue;
+  std::vector<std::optional<uint64_t>> m_inputBinaryValue;
   uint64_t m_readBinaryValue;
 };
