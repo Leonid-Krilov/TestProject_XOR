@@ -31,33 +31,46 @@ void WorkFile::searchInputFiles(std::string pathInputFile, std::string maskFile)
   }
 }
 
-std::vector<uint64_t> WorkFile::readFile(bool checkBoxDeletedFiles)
+bool WorkFile::checkMoreСharacters(const std::string& variableString)
+{
+    return !variableString.empty() && std::all_of(variableString.begin(), variableString.end(), ::isdigit);
+}
+
+std::vector<std::optional<uint64_t>> WorkFile::readFile(bool checkBoxDeletedFiles)
 {
   std::string variableString;
   std::ifstream read;
 
-  for (std::string pathFiles : m_vectorPathFiles)
+  for (auto pathFiles = m_vectorPathFiles.begin(); pathFiles != m_vectorPathFiles.end();)
   {
-    read.open(pathFiles);
-
+    read.open(*pathFiles);
     if (!read.is_open())
-        qDebug() << "\nError open input file";
-    else
+      qDebug() << "\nError open input file";
+
+    while (std::getline(read, variableString))
     {
-      while (std::getline(read, variableString))
-        m_variable.push_back(std::stoi(variableString));
+      if (!checkMoreСharacters(variableString))
+      {
+        m_variable.push_back(std::nullopt);
+        pathFiles = m_vectorPathFiles.erase(pathFiles);
+      }
+      else
+      {
+        m_variable.push_back(std::stoll(variableString));
+        pathFiles++;
+      }
     }
 
-    read.close();
-
     if (checkBoxDeletedFiles)
-      std::filesystem::remove(pathFiles);
+        std::filesystem::remove(*pathFiles);
+
+    read.close();
   }
 
   return m_variable;
 }
 
-void WorkFile::saveFile(std::vector<uint64_t>(resultXOR), std::string pathOutFile, bool checkBoxModificateFiles)
+void WorkFile::saveFile(std::vector<std::optional<uint64_t>>(resultXOR), std::string pathOutFile, bool checkBoxModificateFiles)
 {
   static int counter = 1;
 
@@ -84,8 +97,13 @@ void WorkFile::saveFile(std::vector<uint64_t>(resultXOR), std::string pathOutFil
 
     if (writeFile.is_open())
     {
-      writeFile << resultXOR[i];
-      writeFile.close();
+      if(!resultXOR[i].has_value())
+        writeFile << "Error! Incorrected input or read binary meaning!";
+      else
+      {
+        writeFile << resultXOR[i].value();
+        writeFile.close();
+      }
     }
   }
 }
