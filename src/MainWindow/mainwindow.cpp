@@ -24,16 +24,21 @@ void MainWindow::checkBoxChanged()
 
 void MainWindow::workOneTineLaunch()
 {
-  receivingString();
+  if (!receivingString())
+  {
+    std::cout << "Idi naxuy";
+  }
+  else
+  {
+    WorkFile workFile;
+    workFile.searchInputFiles(m_stringPathInputFiles, m_stringMaskInputFiles);
+    std::vector<std::optional<uint64_t>> variable = workFile.readFile(m_checkBoxDeleteFiles);
 
-  WorkFile workFile;
-  workFile.searchInputFiles(m_stringPathInputFiles, m_stringMaskInputFiles);
-  std::vector<uint64_t> variable = workFile.readFile(m_checkBoxDeleteFiles);
+    XOR resultXOR(variable, std::stoi(m_inputBinaryValue));
+    workFile.saveFile(resultXOR.functionXOR(), m_stringPathOutFiles, m_checkBoxModificOutFiles);
 
-  XOR resultXOR(variable, std::stoi(m_inputBinaryValue));
-  workFile.saveFile(resultXOR.functionXOR(), m_stringPathOutFiles, m_checkBoxModificOutFiles);
-
-  workFile.clear();
+    workFile.clear();
+  }
 }
 
 void MainWindow::cycleWork()
@@ -42,26 +47,31 @@ void MainWindow::cycleWork()
 
   do
   {
-    receivingString();
-
-    workFile.searchInputFiles(m_stringPathInputFiles, m_stringMaskInputFiles);
-    std::vector<uint64_t> variable = workFile.readFile(m_checkBoxDeleteFiles);
-
-    XOR resultXOR(variable, std::stoi(m_inputBinaryValue));
-    workFile.saveFile(resultXOR.functionXOR(), m_stringPathOutFiles, m_checkBoxModificOutFiles);
-
-    QThread::sleep(m_inputSpinTimer);
-    DialogConfirmationWindow startDialog(this);
-    int resultDialog = startDialog.exec();
-
-    if(resultDialog == QDialog::Rejected)
+    if (!receivingString())
+    {
       break;
-  } while(true);
+    }
+    else
+    {
+      workFile.searchInputFiles(m_stringPathInputFiles, m_stringMaskInputFiles);
+      std::vector<std::optional<uint64_t>> variable = workFile.readFile(m_checkBoxDeleteFiles);
 
-  workFile.clear();
+      XOR resultXOR(variable, std::stoi(m_inputBinaryValue));
+      workFile.saveFile(resultXOR.functionXOR(), m_stringPathOutFiles, m_checkBoxModificOutFiles);
+
+      QThread::sleep(m_inputSpinTimer);
+      DialogConfirmationWindow startDialog(this);
+      int resultDialog = startDialog.exec();
+
+      if(resultDialog == QDialog::Rejected)
+        break;
+
+      workFile.clear();
+    }
+  } while(true);
 }
 
-void MainWindow::receivingString()
+bool MainWindow::receivingString()
 {
   if (!ui->pathInputFiles->text().isEmpty() && !ui->maskInputFiles->text().isEmpty() && !ui->pathOutFiles->text().isEmpty() && !ui->binaryValue->text().isEmpty())
   {
@@ -74,7 +84,9 @@ void MainWindow::receivingString()
     this->m_checkBoxModificOutFiles = ui->checkBoxModificOutFiles->isChecked();
 
     this->m_inputSpinTimer = ui->spinBoxTimer->text().toInt();
+
+    return true;
   }
   else
-    qDebug() << "Error";
+    return false;
 }

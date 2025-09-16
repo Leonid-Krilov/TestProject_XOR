@@ -11,6 +11,7 @@
 #include <vector>
 #include <cstdint>
 #include <QThread>
+#include <optional>
 
 #include "WorkFile.h"
 #include "XOR.h"
@@ -37,7 +38,7 @@ private slots:
   void cycleWork();
 
 private:
-  void receivingString();
+  bool receivingString();
 
 private:
   int m_inputSpinTimer;
