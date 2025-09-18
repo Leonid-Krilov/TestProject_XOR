@@ -6,8 +6,8 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
   ui->setupUi(this);
 
   ui->spinBoxTimer->setEnabled(ui->checkBoxTimer->isChecked());
-  connect(ui->checkBoxTimer, &QCheckBox::checkStateChanged, this, &MainWindow::checkBoxChanged);
-
+  //connect(ui->checkBoxTimer, &QCheckBox::checkStateChanged, this, &MainWindow::checkBoxChanged);
+  connect(ui->checkBoxTimer, &QCheckBox::stateChanged, this, &MainWindow::checkBoxChanged);
   connect(ui->oneTimeLaunchButton, &QPushButton::clicked, this, &MainWindow::workOneTineLaunch);
   connect(ui->cycleWorkButton, &QPushButton::clicked, this, &MainWindow::cycleWork);
 }
@@ -24,17 +24,13 @@ void MainWindow::checkBoxChanged()
 
 void MainWindow::workOneTineLaunch()
 {
-  if (!receivingString())
-  {
-    std::cout << "Idi naxuy";
-  }
-  else
+  if (receivingString())
   {
     WorkFile workFile;
     workFile.searchInputFiles(m_stringPathInputFiles, m_stringMaskInputFiles);
-    std::vector<std::optional<uint64_t>> variable = workFile.readFile(m_checkBoxDeleteFiles);
+    std::vector<unsigned long long> variable = workFile.readFile(m_checkBoxDeleteFiles);
 
-    XOR resultXOR(variable, std::stoi(m_inputBinaryValue));
+    XOR resultXOR(variable, workFile.checkMoreСharacters(m_inputBinaryValue));
     workFile.saveFile(resultXOR.functionXOR(), m_stringPathOutFiles, m_checkBoxModificOutFiles);
 
     workFile.clear();
@@ -47,16 +43,12 @@ void MainWindow::cycleWork()
 
   do
   {
-    if (!receivingString())
-    {
-      break;
-    }
-    else
+    if (receivingString())
     {
       workFile.searchInputFiles(m_stringPathInputFiles, m_stringMaskInputFiles);
-      std::vector<std::optional<uint64_t>> variable = workFile.readFile(m_checkBoxDeleteFiles);
+      std::vector<unsigned long long> variable = workFile.readFile(m_checkBoxDeleteFiles);
 
-      XOR resultXOR(variable, std::stoi(m_inputBinaryValue));
+      XOR resultXOR(variable, workFile.checkMoreСharacters(m_inputBinaryValue));
       workFile.saveFile(resultXOR.functionXOR(), m_stringPathOutFiles, m_checkBoxModificOutFiles);
 
       QThread::sleep(m_inputSpinTimer);

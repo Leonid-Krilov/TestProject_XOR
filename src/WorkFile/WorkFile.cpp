@@ -31,13 +31,38 @@ void WorkFile::searchInputFiles(std::string pathInputFile, std::string maskFile)
   }
 }
 
-bool WorkFile::checkMoreСharacters(const std::string& variableString)
+unsigned long long WorkFile::checkMoreСharacters(const std::string& variableString)
 {
-    return !variableString.empty() && std::all_of(variableString.begin(), variableString.end(), ::isdigit);
+  std::stringstream ss;
+
+  if (variableString.size() >=2 && (variableString.substr(0, 2) == "0x" ||  variableString.substr(0, 2) == "0X"))
+    return std::stoull(variableString.substr(2), nullptr, 16);
+
+  if (variableString.size() >=2 && (variableString.substr(0, 2) == "0b" ||  variableString.substr(0, 2) == "0B"))
+    return std::stoull(variableString.substr(2), nullptr, 2);
+
+  if(variableString.size() >=1 && variableString[0] == '0')
+  {
+    std::string cleanBinary = variableString.substr(1);
+    for (char c : cleanBinary)
+    {
+      if(c < '0' || c > '7')
+      return -1;
+    }
+
+    unsigned long long number = std::stoull(cleanBinary, nullptr, 8);
+      return std::stoull(variableString.substr(1), nullptr, 8);
+  }
+
+  if (!variableString.empty() && std::all_of(variableString.begin(), variableString.end(), ::isdigit))
+    return std::stoull(variableString, nullptr, 10);
+
+  return -1;
 }
 
-std::vector<std::optional<uint64_t>> WorkFile::readFile(bool checkBoxDeletedFiles)
+std::vector<unsigned long long> WorkFile::readFile(bool checkBoxDeletedFiles)
 {
+  unsigned long long variableInt;
   std::string variableString;
   std::ifstream read;
 
@@ -49,14 +74,15 @@ std::vector<std::optional<uint64_t>> WorkFile::readFile(bool checkBoxDeletedFile
 
     while (std::getline(read, variableString))
     {
-      if (!checkMoreСharacters(variableString))
+      variableInt = checkMoreСharacters(variableString);
+      if (variableInt == -1)
       {
-        m_variable.push_back(std::nullopt);
+        m_variable.push_back(variableInt);
         pathFiles = m_vectorPathFiles.erase(pathFiles);
       }
       else
       {
-        m_variable.push_back(std::stoll(variableString));
+        m_variable.push_back(variableInt);
         pathFiles++;
       }
     }
@@ -70,7 +96,7 @@ std::vector<std::optional<uint64_t>> WorkFile::readFile(bool checkBoxDeletedFile
   return m_variable;
 }
 
-void WorkFile::saveFile(std::vector<std::optional<uint64_t>>(resultXOR), std::string pathOutFile, bool checkBoxModificateFiles)
+void WorkFile::saveFile(std::vector<std::string>(resultXOR), std::string pathOutFile, bool checkBoxModificateFiles)
 {
   static int counter = 1;
 
@@ -97,11 +123,11 @@ void WorkFile::saveFile(std::vector<std::optional<uint64_t>>(resultXOR), std::st
 
     if (writeFile.is_open())
     {
-      if(!resultXOR[i].has_value())
+      if(resultXOR[i].empty())
         writeFile << "Error! Incorrected input or read binary meaning!";
       else
       {
-        writeFile << resultXOR[i].value();
+        writeFile << resultXOR[i];
         writeFile.close();
       }
     }

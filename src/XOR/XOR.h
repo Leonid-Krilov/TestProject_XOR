@@ -5,16 +5,17 @@
 #include <bitset>
 #include <vector>
 #include <optional>
+#include <sstream>
 
 class XOR
 {
 public:
-  XOR(std::vector<std::optional<uint64_t>> inputBinaryValue, uint64_t readBinaryValue);
+  XOR(std::vector<unsigned long long> inputBinaryValue, unsigned long long readBinaryValue);
   ~XOR() = default;
 
-  std::vector<std::optional<uint64_t>> functionXOR();
+  std::vector<std::string> functionXOR();
 
 private:
-  std::vector<std::optional<uint64_t>> m_inputBinaryValue;
-  uint64_t m_readBinaryValue;
+  std::vector<unsigned long long> m_inputBinaryValue;
+  unsigned long long m_readBinaryValue;
 };

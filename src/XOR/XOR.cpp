@@ -2,26 +2,29 @@
 #include <QDebug>
 
 
-XOR::XOR(std::vector<std::optional<uint64_t>> inputBinaryValue, uint64_t readBinaryValue)
+XOR::XOR(std::vector<unsigned long long> inputBinaryValue, unsigned long long readBinaryValue)
 {
     this->m_inputBinaryValue = inputBinaryValue;
     this->m_readBinaryValue = readBinaryValue;
 }
 
-std::vector<std::optional<uint64_t>> XOR::functionXOR()
+std::vector<std::string> XOR::functionXOR()
 {
-  std::vector<std::optional<uint64_t>> resultXOR;
+  std::vector<std::string> resultVectorXOR;
 
-  for (std::optional<uint64_t> inputValue : m_inputBinaryValue)
+  for (unsigned long long inputValue : m_inputBinaryValue)
   {
-    if (!inputValue.has_value())
-      resultXOR.push_back(std::nullopt);
+      if (inputValue == -1)
+      resultVectorXOR.push_back("");
     else
     {
-      std::optional<uint64_t> uintResultXOR = inputValue.value() ^ m_readBinaryValue;
-      resultXOR.push_back(uintResultXOR.value());
+      unsigned long long resultXOR = inputValue ^ m_readBinaryValue;
+      std::stringstream ss;
+      ss << "0x" << std::hex << std::uppercase << resultXOR;
+      qDebug() << ss.str().c_str();
+      resultVectorXOR.push_back(ss.str());
     }
   }
 
-  return resultXOR;
+  return resultVectorXOR;
 }
