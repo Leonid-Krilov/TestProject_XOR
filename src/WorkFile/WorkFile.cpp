@@ -1,7 +1,5 @@
 #include "WorkFile.h"
 
-#include <QDebug>
-
 void WorkFile::clear()
 {
     m_vectorPathFiles.clear();
@@ -9,7 +7,7 @@ void WorkFile::clear()
     m_variable.clear();
 }
 
-void WorkFile::searchInputFiles(std::string pathInputFile, std::string maskFile)
+void WorkFile::searchInputFiles(std::string& pathInputFile, std::string& maskFile)
 {
   try {
     for (const auto& entry : std::filesystem::directory_iterator(pathInputFile))
@@ -46,12 +44,12 @@ unsigned long long WorkFile::checkMoreСharacters(const std::string& variableStr
     std::string cleanBinary = variableString.substr(1);
     for (char c : cleanBinary)
     {
-      if(c < '0' || c > '7')
-      return -1;
+      if((c < '0') || (c > '7'))
+        return -1;
     }
 
     unsigned long long number = std::stoull(cleanBinary, nullptr, 8);
-      return std::stoull(variableString.substr(1), nullptr, 8);
+    return std::stoull(variableString.substr(1), nullptr, 8);
   }
 
   if (!variableString.empty() && std::all_of(variableString.begin(), variableString.end(), ::isdigit))
@@ -60,43 +58,61 @@ unsigned long long WorkFile::checkMoreСharacters(const std::string& variableStr
   return -1;
 }
 
-std::vector<unsigned long long> WorkFile::readFile(bool checkBoxDeletedFiles)
+std::vector<unsigned long long> WorkFile::readFile(bool& checkBoxDeletedFiles)
 {
-  unsigned long long variableInt;
-  std::string variableString;
-  std::ifstream read;
+    unsigned long long variableInt;
+    std::string variableString;
+    std::ifstream read;
 
-  for (auto pathFiles = m_vectorPathFiles.begin(); pathFiles != m_vectorPathFiles.end();)
-  {
-    read.open(*pathFiles);
-    if (!read.is_open())
-      qDebug() << "\nError open input file";
-
-    while (std::getline(read, variableString))
+    for (auto pathFiles = m_vectorPathFiles.begin(); pathFiles != m_vectorPathFiles.end();)
     {
-      variableInt = checkMoreСharacters(variableString);
-      if (variableInt == -1)
-      {
-        m_variable.push_back(variableInt);
-        pathFiles = m_vectorPathFiles.erase(pathFiles);
-      }
-      else
-      {
-        m_variable.push_back(variableInt);
-        pathFiles++;
-      }
+        read.open(*pathFiles);
+        if (!read.is_open())
+        {
+            qDebug() << "\nError open input file:" << QString::fromStdString(*pathFiles);
+            ++pathFiles;
+            continue;
+        }
+
+        bool fileHasErrors = false;
+
+        while (std::getline(read, variableString))
+        {
+            variableInt = checkMoreСharacters(variableString);
+            if (variableInt == -1)
+            {
+                fileHasErrors = true;
+                break;
+            }
+            else
+            {
+                m_variable.push_back(variableInt);
+            }
+        }
+
+        read.close();
+
+        if (fileHasErrors || checkBoxDeletedFiles)
+        {
+            if (std::filesystem::exists(*pathFiles))
+            {
+                std::filesystem::remove(*pathFiles);
+            }
+
+            if (fileHasErrors)
+            {
+                pathFiles = m_vectorPathFiles.erase(pathFiles);
+                continue;
+            }
+        }
+
+        ++pathFiles;
     }
 
-    if (checkBoxDeletedFiles)
-        std::filesystem::remove(*pathFiles);
-
-    read.close();
-  }
-
-  return m_variable;
+    return m_variable;
 }
 
-void WorkFile::saveFile(std::vector<std::string>(resultXOR), std::string pathOutFile, bool checkBoxModificateFiles)
+void WorkFile::saveFile(std::vector<std::string>&(resultXOR), std::string& pathOutFile, bool& checkBoxModificateFiles)
 {
   static int counter = 1;
 

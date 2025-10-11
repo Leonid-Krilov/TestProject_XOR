@@ -31,7 +31,9 @@ void MainWindow::workOneTineLaunch()
     std::vector<unsigned long long> variable = workFile.readFile(m_checkBoxDeleteFiles);
 
     XOR resultXOR(variable, workFile.checkMoreСharacters(m_inputBinaryValue));
-    workFile.saveFile(resultXOR.functionXOR(), m_stringPathOutFiles, m_checkBoxModificOutFiles);
+    std::vector<std::string> vectorResultXOR = resultXOR.functionXOR();
+
+    workFile.saveFile(vectorResultXOR, m_stringPathOutFiles, m_checkBoxModificOutFiles);
 
     workFile.clear();
   }
@@ -49,7 +51,8 @@ void MainWindow::cycleWork()
       std::vector<unsigned long long> variable = workFile.readFile(m_checkBoxDeleteFiles);
 
       XOR resultXOR(variable, workFile.checkMoreСharacters(m_inputBinaryValue));
-      workFile.saveFile(resultXOR.functionXOR(), m_stringPathOutFiles, m_checkBoxModificOutFiles);
+      std::vector<std::string> vectorResultXOR = resultXOR.functionXOR();
+      workFile.saveFile(vectorResultXOR, m_stringPathOutFiles, m_checkBoxModificOutFiles);
 
       QThread::sleep(m_inputSpinTimer);
       DialogConfirmationWindow startDialog(this);

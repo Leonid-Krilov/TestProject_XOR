@@ -21,7 +21,7 @@ std::vector<std::string> XOR::functionXOR()
       unsigned long long resultXOR = inputValue ^ m_readBinaryValue;
       std::stringstream ss;
       ss << "0x" << std::hex << std::uppercase << resultXOR;
-      qDebug() << ss.str().c_str();
+
       resultVectorXOR.push_back(ss.str());
     }
   }

@@ -15,9 +15,9 @@ public:
   WorkFile() = default;
   ~WorkFile() = default;
   
-  void searchInputFiles(std::string pathInputFile, std::string maskFile);
-  std::vector<unsigned long long> readFile(bool checkBoxDeletedFiles);
-  void saveFile(std::vector<std::string>(resultXOR), std::string pathOutFile, bool checkBoxModificateFiles);
+  void searchInputFiles(std::string& pathInputFile, std::string& maskFile);
+  std::vector<unsigned long long> readFile(bool& checkBoxDeletedFiles);
+  void saveFile(std::vector<std::string>&(resultXOR), std::string& pathOutFile, bool& checkBoxModificateFiles);
   void clear();
   unsigned long long checkMoreСharacters(const std::string& variableString);
 
